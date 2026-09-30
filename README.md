@@ -53,34 +53,3 @@ The main features of the Employee Management System will include:
 
 
 ## MVT Architecture Design
-
-The SkillBridge Employee Management System follows a Django MVT-based architecture with middleware, URL routing, a service layer, repository layer, and SQL Server database.
-
-```mermaid
-flowchart TD
-
-    Browser["Browser<br/><br/>Sends HTTP requests<br/>Displays HTML response (page)"]
-
-    Middleware["Middleware<br/><br/>Security<br/>Sessions<br/>Authentication<br/>CSRF<br/>Logging"]
-
-    URLConf["URLCONF<br/><br/>URL Routing"]
-
-    View["VIEW<br/><br/>Employee List<br/>Add Employee<br/>Edit Employee Details<br/>Delete Employee Details"]
-
-    Service["SERVICE LAYER<br/><br/>EmployeeService<br/>Business Logic"]
-
-    Repository["REPOSITORY LAYER<br/><br/>Employee Data"]
-
-    Database["SQL SERVER<br/><br/>Employee Data"]
-
-    Browser -->|"Request goes in"| Middleware
-    Middleware --> URLConf
-    URLConf --> View
-    View --> Service
-    Service --> Repository
-    Repository --> Database
-
-    Database -->|"Response / Data returned"| Repository
-    Repository --> Service
-    Service --> View
-    View -->|"HTML response"| Browser 
