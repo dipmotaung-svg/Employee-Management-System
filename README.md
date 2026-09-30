@@ -37,7 +37,7 @@ The main features of the Employee Management System will include:
 
 | Feature | Description | Importance |
 |---|---|---|
-| **Employee List** | Allows authorised users to view a list of employees. | High |
+| **Employees List** | Allows authorised users to view a list of employees. | High |
 | **Employee Search** | Allows users to search for specific employees. | High |
 | **Employee Filtering** | Allows users to filter employee information where appropriate. | Medium |
 | **Employee Details** | Allows users to view detailed information about an individual employee. | High |
