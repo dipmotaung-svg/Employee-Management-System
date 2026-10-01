@@ -1,8 +1,12 @@
-# Employee-Management-System
-I have developed a secure employee management system that is a database-driven web application that allows authorised users to efficiently manage employee information. The system provides users with the ability to view, search, add, update and delete employee records while ensuring that employee information is validated and securely managed. The system is also be designed in a way that allows additional functionality like employee skills and training records, to be added at any time the authorised user wishes.
+# Employee Management System
+The Employee Management System is a secure system that is a database-driven web application that allows authorised users to efficiently manage employee information. The system provides users with the ability to view, search, add, update and delete employee records while ensuring that employee information is validated and securely managed. The system is designed using Django's MVT architecture and uses a SQL Server database to store employee information securely.
 
-## What the client needs:
-The client needs a secure and centralised web application that allows authorised users to efficiently manage, access, search and update employee information while keeping employee records accurate and organised.
+## Project objective:
+The objective of the SkillBridge Employee Management System is to develop a secure and organised web application that allows authorised users to efficiently manage employee information. The system will provide functionality for viewing, searching, adding, updating and deleting employee records while ensuring that employee information is validated and protected from unauthorised access. The application will also be structured so that additional functionality, such as employee skills and training records, can be added in the future.
+
+## Problem Statement:
+
+The client requires a secure and centralised way to manage employee information effectively without any struggle, that means they need to be able to access, search, add, update, and maintained  employee records without any struggle by authorised personnel, so without an appropriate system the task of managing employee information can become inefficient and extremely difficult to keep records up to date and accurate. The Employee Management System will provide a centralised web-based solution for managing employee information securely and efficiently.
 
 ## Functional Requirements
 
