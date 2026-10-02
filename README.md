@@ -58,4 +58,4 @@ The main features of the Employee Management System will include:
 
 ## MVT Architecture Design
 
-![MVT Architecture Diagram](docs/mvt-architecture.drawio.png)
+![MVT Architecture Diagram](docs/mvt-architecture.drawio(2).png)
