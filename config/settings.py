@@ -39,16 +39,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'employees',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "employees.middleware.RequestLoggingMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -56,7 +59,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,9 +78,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "mssql",
+        "NAME": os.getenv("DB_NAME", "SkillBridgeEMS"),
+        "USER": os.getenv("DB_USER", "sa"),
+        "PASSWORD": os.getenv("DB_PASSWORD", ""),
+        "HOST": os.getenv("DB_HOST", r".\SQLEXPRESS"),
+        "PORT": os.getenv("DB_PORT", ""),
+        "OPTIONS": {
+            "driver": "ODBC Driver 18 for SQL Server",
+            "extra_params": "TrustServerCertificate=yes;",
+        },
     }
 }
 
@@ -116,7 +127,34 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STORAGES = {
+    "default":{
+        "BACKEND": "django.core.files.storage.FileSystemStorage"
+    },
+    "staticfiles": { 
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"
+    },
+}
+
+LOGIN_URL = "/admin/login/"
+
+LOGGING = {
+    "version" : 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console" : {"class" : "logging.StreamHandler"},
+        "file" : {"class" : "logging.FileHandler" , "filename" : BASE_DIR / "logs/requests.log"},
+    },
+
+    "loggers" : {
+        "ems.requests" : {"handlers" : ["console", "file"], "level" : "INFO"},
+    },
+}
+
 
 
 # Email
