@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Employees{% endblock %}
+{% block content %}
+<h2>Employees</h2>
+<form method="get">
+    <input type="text" name="q" value="{{ search }}" placeholder="Search by name or email">
+    <button type="submit">Search</button>
+</form>
+<table>
+    <thead>
+    <tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Title</th></tr>
+    </thead>
+    <tbody>
+    {% for e in employees %}
+    <tr>
+        <td>{{ e.employee_id }}</td>
+        <td>{{ e.first_name }} {{ e.last_name }}</td>
+        <td>{{ e.email }}</td>
+        <td>{{ e.department.name }}</td>
+        <td>{{ e.title }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">No employees found.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

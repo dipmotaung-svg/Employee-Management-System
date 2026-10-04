@@ -1,0 +1,1 @@
+console.log("SkillBridge EMS: main.js loaded");
