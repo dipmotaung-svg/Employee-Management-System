@@ -10,7 +10,10 @@
 </head>
 
 <body>
-    <header><h1>SkillBridge Employee Management System</h1></header>
+    <header>
+        <h1>SkillBridge Employee Management System</h1>
+        <img src="{% static 'images/logo.png' %}" alt="Company logo" height="40">
+    </header>
     <main>{% block content %}{% endblock %}</main>
     <script src="{% static 'js/main.js' %}"></script>
 </body>
