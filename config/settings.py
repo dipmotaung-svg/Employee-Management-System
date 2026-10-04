@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-secret_key = os.getenv("DJANGO_SECRET_KEY", "dev-key-change-me")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-key-change-me")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
@@ -81,13 +81,11 @@ DATABASES = {
     "default": {
         "ENGINE": "mssql",
         "NAME": os.getenv("DB_NAME", "SkillBridgeEMS"),
-        "USER": os.getenv("DB_USER", "sa"),
-        "PASSWORD": os.getenv("DB_PASSWORD", ""),
         "HOST": os.getenv("DB_HOST", r".\SQLEXPRESS"),
         "PORT": os.getenv("DB_PORT", ""),
         "OPTIONS": {
             "driver": "ODBC Driver 18 for SQL Server",
-            "extra_params": "TrustServerCertificate=yes;",
+            "extra_params": "Trusted_Connection=yes;TrustServerCertificate=yes;",
         },
     }
 }
