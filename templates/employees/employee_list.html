@@ -1,14 +1,48 @@
 {% extends "base.html" %}
-{% block title %}Employees{% endblock %}
+{% block title %}Dashboard{% endblock %}
 {% block content %}
-<h2>Employees</h2>
-<form method="get">
-    <input type="text" name="q" value="{{ search }}" placeholder="Search by name or email">
-    <button type="submit">Search</button>
+<h2>Dashboard</h2>
+
+<section class="cards">
+    <div class="card"><span class="card-number">{{ summary.total }}</span><span class="card-label">Total employees</span></div>
+    <div class="card"><span class="card-number">{{ summary.active }}</span><span class="card-label">Active</span></div>
+    <div class="card alert"><span class="card-number">{{ summary.inactive }}</span><span class="card-label">Inactive</span></div>
+    <div class="card"><span class="card-number">{{ summary.departments }}</span><span class="card-label">Departments</span></div>
+</section>
+
+<form method="get" class="filters">
+    <input type="text" name="q" value="{{ search }}" placeholder="Search name or email">
+
+    <select name="department">
+        <option value="">All departments</option>
+        {% for d in departments %}
+        <option value="{{ d.id }}" {% if d.id|stringformat:"s" == selected_department %}selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="type">
+    <option value="">All types</option>
+        {% for value, label in employee_types %}
+            <option value="{{ value }}" {% if value == selected_type %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="status">
+        <option value="">Any status</option>
+        <option value="active" {% if selected_status == "active" %}selected{% endif %}>Active</option>
+        <option value="inactive" {% if selected_status == "inactive" %}selected{% endif %}>Inactive</option>
+    </select>
+
+    <button type="submit">Apply filters</button>
+    <a href="{% url 'employee_list' %}" class="reset">Reset</a>
 </form>
-<table>
+
+<p class="result-count">Showing {{ employees|length }} employee{{ employees|length|pluralize }}</p>
+
+<div class="table-wrap">
+    <table>
     <thead>
-    <tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Title</th></tr>
+        <tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Title</th><th>Type</th><th>Status</th></tr>
     </thead>
     <tbody>
     {% for e in employees %}
@@ -18,10 +52,16 @@
         <td>{{ e.email }}</td>
         <td>{{ e.department.name }}</td>
         <td>{{ e.title }}</td>
+        <td>{{ e.get_employee_type_display }}</td>
+        <td>
+            {% if e.is_active %}<span class="badge badge-active">Active</span>
+            {% else %}<span class="badge badge-inactive">Inactive</span>{% endif %}
+        </td>
     </tr>
-    {% empty %}
-    <tr><td colspan="5">No employees found.</td></tr>
-    {% endfor %}
-    </tbody>
-</table>
+        {% empty %}
+            <tr><td colspan="7">No employees match these filters.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
