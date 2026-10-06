@@ -15,23 +15,20 @@ from dotenv import load_dotenv
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = path(__file__).resolve().parent.parent 
 
-#--------------------------------------------------------
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-key-change-me")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-key-change-me")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-#ALLOWED_HOSTS = []
-#=---------------------------
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'dev-insecure-key-change-me')
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else []
+ALLOWED_HOSTS = []
+
 
 # Application definition
 
@@ -43,8 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'employees',
-    'rest_framework',
-    'channels',
 ]
 
 MIDDLEWARE = [
@@ -85,9 +80,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "mssql",
-        "NAME": os.getenv("DB_NAME", "SkillBridgeEmploymentManagementSystem"),
-        "USER": os.getenv("DB_USER", "sa"),
-        "PASSWORD": os.getenv("DB_PASSWORD", ""),
+        "NAME": os.getenv("DB_NAME", "SkillBridgeEMS"),
         "HOST": os.getenv("DB_HOST", r".\SQLEXPRESS"),
         "PORT": os.getenv("DB_PORT", ""),
         "OPTIONS": {
@@ -145,7 +138,9 @@ STORAGES = {
     },
 }
 
-LOGIN_URL = "/admin/login/"
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "employee_list"
+LOGOUT_REDIRECT_URL = "login"
 
 LOGGING = {
     "version" : 1,

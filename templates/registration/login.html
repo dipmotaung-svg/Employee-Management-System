@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SkillBridge EMS</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body class="login-page">
+<div class="login-container">
+    <!-- LEFT SIDE -->
+    <section class="login-brand">
+        <div class="brand-logo big">
+            SB
+        </div>
+
+        <span class="eyebrow">
+            SKILLBRIDGE SOFTWARE SOLUTIONS
+        </span>
+
+        <h1>
+            Employee
+            <br>
+            <span>
+                Management
+            </span>
+            <br>
+            System
+        </h1>
+
+        <p>
+            Secure access to employee information,
+            directory search and workforce management.
+        </p>
+    </section>
+
+    <section class="login-card">
+        <span class="eyebrow">
+            AUTHENTICATION
+        </span>
+
+        <h2>Welcome back.</h2>
+
+        <p class="login-description">Please Sign in with authorised account</p>
+
+        {% if form.errors %}
+            <div class="login-error">
+                Incorrect username or password.
+                Please try again.
+            </div>
+        {% endif %}
+
+        <form method="post" class="login-form">
+            
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="next"
+                value="{{ next }}"
+            >
+
+            <label for="id_username">
+                Username
+            </label>
+            {{ form.username }}
+
+            <label for="id_password">
+                Password
+            </label>
+            {{ form.password }}
+            <button type="submit" class="login-button">
+                SIGN IN
+                <span>
+                    →
+                </span>
+            </button>
+        </form>
+
+    
+    </section>
+</div>
+</body>
+</html>

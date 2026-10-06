@@ -1,67 +1,313 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
-{% block content %}
-<h2>Dashboard</h2>
+{% block title %}Dashboard | SkillBridge EMS{% endblock %}
 
-<section class="cards">
-    <div class="card"><span class="card-number">{{ summary.total }}</span><span class="card-label">Total employees</span></div>
-    <div class="card"><span class="card-number">{{ summary.active }}</span><span class="card-label">Active</span></div>
-    <div class="card alert"><span class="card-number">{{ summary.inactive }}</span><span class="card-label">Inactive</span></div>
-    <div class="card"><span class="card-number">{{ summary.departments }}</span><span class="card-label">Departments</span></div>
+
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">
+            OVERVIEW
+        </span>
+
+        <h1>
+            Dashboard
+        </h1>
+
+        <p>
+            Monitor and manage your employee directory.
+        </p>
+    </div>
+
+    <div class="live-badge">
+        System is Live
+    </div>
 </section>
 
-<form method="get" class="filters">
-    <input type="text" name="q" value="{{ search }}" placeholder="Search name or email">
+<section class="stats">
+    <div class="stat-card">
+        <div class="stat-icon">
+            ♙
+        </div>
 
-    <select name="department">
-        <option value="">All departments</option>
-        {% for d in departments %}
-        <option value="{{ d.id }}" {% if d.id|stringformat:"s" == selected_department %}selected{% endif %}>{{ d.name }}</option>
-        {% endfor %}
-    </select>
+        <div>
+            <span>
+                TOTAL EMPLOYEES
+            </span>
 
-    <select name="type">
-    <option value="">All types</option>
-        {% for value, label in employee_types %}
-            <option value="{{ value }}" {% if value == selected_type %}selected{% endif %}>{{ label }}</option>
-        {% endfor %}
-    </select>
+            <strong>
+                {{ summary.total_employees }}
+            </strong>
+        </div>
+    </div>
 
-    <select name="status">
-        <option value="">Any status</option>
-        <option value="active" {% if selected_status == "active" %}selected{% endif %}>Active</option>
-        <option value="inactive" {% if selected_status == "inactive" %}selected{% endif %}>Inactive</option>
-    </select>
+    <div class="stat-card active-card">
+        <div class="stat-icon">
+            ✓
+        </div>
 
-    <button type="submit">Apply filters</button>
-    <a href="{% url 'employee_list' %}" class="reset">Reset</a>
-</form>
+        <div>
+            <span>
+                ACTIVE EMPLOYEES
+            </span>
 
-<p class="result-count">Showing {{ employees|length }} employee{{ employees|length|pluralize }}</p>
+            <strong>
+                {{ summary.active_employees }}
+            </strong>
+        </div>
+    </div>
 
-<div class="table-wrap">
-    <table>
-    <thead>
-        <tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Title</th><th>Type</th><th>Status</th></tr>
-    </thead>
-    <tbody>
-    {% for e in employees %}
-    <tr>
-        <td>{{ e.employee_id }}</td>
-        <td>{{ e.first_name }} {{ e.last_name }}</td>
-        <td>{{ e.email }}</td>
-        <td>{{ e.department.name }}</td>
-        <td>{{ e.title }}</td>
-        <td>{{ e.get_employee_type_display }}</td>
-        <td>
-            {% if e.is_active %}<span class="badge badge-active">Active</span>
-            {% else %}<span class="badge badge-inactive">Inactive</span>{% endif %}
-        </td>
-    </tr>
-        {% empty %}
-            <tr><td colspan="7">No employees match these filters.</td></tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            !
+        </div>
+
+        <div>
+            <span>
+                INACTIVE EMPLOYEES
+            </span>
+
+            <strong>
+                {{ summary.inactive_employees }}
+            </strong>
+        </div>
+    </div>
+
+    <div class="stat-card gold-card">
+        <div class="stat-icon">
+            ▦
+        </div>
+
+        <div>
+            <span>
+                DEPARTMENTS
+            </span>
+
+            <strong>
+                {{ summary.department_count }}
+            </strong>
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header">
+        <div>
+            <span class="eyebrow">
+                DIRECTORY
+            </span>
+
+            <h2>
+                Employee Directory
+            </h2>
+        </div>
+
+        <span class="result-count">
+            {{ employees|length }}
+            result{{ employees|length|pluralize }}
+        </span>
+    </div>
+
+    <form method="get" class="filters">
+        <div class="search-box">
+            <span>
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                name="q"
+                value="{{ search }}"
+                placeholder="Search by name, ID or email"
+            >
+        </div>
+
+        <select name="department">
+            <option value="">
+                All Departments
+            </option>
+
+            {% for department in departments %}
+
+                <option
+                    value="{{ department.id }}"
+                    {% if department.id|stringformat:"s" == selected_department %}
+                    selected
+                    {% endif %}
+                >
+
+                    {{ department.name }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+
+
+        <select name="employee_type">
+            <option value="">
+                All Types
+            </option>
+
+            {% for value, label in employee_types %}
+                <option
+                    value="{{ value }}"
+                    {% if value == selected_employee_type %}
+                    selected
+                    {% endif %}
+                >
+
+                    {{ label }}
+                </option>
+
+            {% endfor %}
+        </select>
+
+        <select name="status">
+            <option value="">
+                Any Status
+            </option>
+
+            <option
+                value="active"
+                {% if selected_status == "active" %}
+                selected
+                {% endif %}
+            >
+                Active
+            </option>
+
+            <option
+                value="inactive"
+                {% if selected_status == "inactive" %}
+                selected
+                {% endif %}
+            >
+                Inactive
+            </option>
+        </select>
+
+        <button
+            type="submit"
+            class="filter-button"
+        >
+            APPLY
+        </button>
+
+        <a
+            href="{% url 'employee_list' %}"
+            class="reset-button"
+        >
+            RESET
+        </a>
+    </form>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        EMPLOYEE
+                    </th>
+
+                    <th>
+                        EMPLOYEE ID
+                    </th>
+
+                    <th>
+                        DEPARTMENT
+                    </th>
+
+                    <th>
+                        POSITION
+                    </th>
+
+                    <th>
+                        TYPE
+                    </th>
+
+                    <th>
+                        STATUS
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td>
+                        <div class="employee">
+                            <div class="employee-avatar">
+                                {{ employee.first_name|slice:":1"|upper }}{{ employee.last_name|slice:":1"|upper }}
+                            </div>
+
+                            <div>
+                                <strong>
+                                    {{ employee.first_name }}
+                                    {{ employee.last_name }}
+                                </strong>
+                                <small>
+                                    {{ employee.email }}
+                                </small>
+                            </div>
+                        </div>
+                    </td>
+
+                    <!-- ID -->
+                    <td>
+                        <span class="employee-id">
+                            {{ employee.employee_id }}
+                        </span>
+                    </td>
+
+                    <!-- DEPARTMENT -->
+                    <td>
+                        {{ employee.department.name }}
+                    </td>
+                    <!-- POSITION -->
+                    <td>
+                        {{ employee.title }}
+                    </td>
+                    <!-- TYPE -->
+                    <td>
+                        {{ employee.get_employee_type_display }}
+                    </td>
+
+                    <!-- STATUS -->
+                    <td>
+                        {% if employee.is_active %}
+                            <span class="status active">
+                                ACTIVE
+                            </span>
+                        {% else %}
+                            <span class="status inactive">
+                                INACTIVE
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty">
+                            <div>
+                                ⌕
+                            </div>
+                            <strong>
+                                No employees found
+                            </strong>
+
+                            <span>
+                                Try changing your search or filters.
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
 {% endblock %}

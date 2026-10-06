@@ -22,17 +22,13 @@ class EmployeeService:
         )
 
     def get_dashboard_summary(self):
-        total_employees = self.repository.count_all()
-        active_employees = self.repository.count_active()
-        departments = self.repository.get_departments()
-        employee_types = self.repository.get_employee_types()
-
-        return {
-            "total_employees": total_employees,
-            "active_employees": active_employees,
-            "departments": departments,
-            "employee_types": employee_types
+        return{
+            "total_employees": self.repository.count_all(),
+            "active_employees": self.repository.count_active(),
+            "inactive_employees": self.repository.count_innactive(),
+            "department_count": self.repository.count_departments
         }
+
 
     def get_departments(self):
         return self.repository.get_departments()
