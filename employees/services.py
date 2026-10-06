@@ -22,24 +22,9 @@ class EmployeeService:
         )
 
     def get_dashboard_summary(self):
-        return{
+        return {
             "total_employees": self.repository.count_all(),
             "active_employees": self.repository.count_active(),
-            "inactive_employees": self.repository.count_innactive(),
-            "department_count": self.repository.count_departments
+            "inactive_employees": self.repository.count_inactive(),
+            "department_count": self.repository.count_departments(),
         }
-
-
-    def get_departments(self):
-        return self.repository.get_departments()
-
-    def get_employee_types(self):
-        return self.repository.get_employee_types()
-
-    def create_employee(self, **data):
-        data["email"] = data["email"].strip().lower()
-        if self.repository.email_exists(data["email"]):
-            raise ValueError("An employee with this email already exists.")
-        return self.repository.save(**data)
-
-    

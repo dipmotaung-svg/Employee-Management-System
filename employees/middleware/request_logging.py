@@ -3,6 +3,7 @@ import time
 
 logger = logging.getLogger("ems.requests")
 
+
 class RequestLoggingMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -21,3 +22,10 @@ class RequestLoggingMiddleware:
         )
         response["X-Response-Time-ms"] = f"{duration_ms:.1f}"
         return response
+
+    def process_exception(self, request, exception):
+        logger.error(
+            "EXCEPTION %s %s | Error: %s",
+            request.method, request.path, exception, exc_info=True,
+        )
+        return None
