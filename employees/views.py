@@ -1,16 +1,14 @@
-from multiprocessing import context
-
-from django.shortcuts import render
-
-# Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views import View
-from urllib3 import request
+
+
+def hello(request):
+    return render(request, "employees/hello.html")
 
 
 class EmployeeListView(LoginRequiredMixin, View):
-    service = None   # filled in from urls.py
+    service = None
 
     def get(self, request):
         search = request.GET.get("q", "")
@@ -18,8 +16,13 @@ class EmployeeListView(LoginRequiredMixin, View):
         employee_type = request.GET.get("employee_type", "")
         status = request.GET.get("status", "")
 
-        context = { 
-            "employees": self.service.list_employees(search, department, employee_type, status),
+        context = {
+            "employees": self.service.list_employees(
+                search,
+                department,
+                employee_type,
+                status
+            ),
             "summary": self.service.get_dashboard_summary(),
             "departments": self.service.get_departments(),
             "employee_types": self.service.get_employee_types(),

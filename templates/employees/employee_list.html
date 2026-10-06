@@ -199,11 +199,10 @@
             href="{% url 'employee_list' %}"
             class="reset-button"
         >
-            RESET
+            {% url 'employees:employee_list' %}
         </a>
     </form>
-
-    <div class="table-container">
+    <section class="panel" id="employees">
         <table>
             <thead>
                 <tr>
@@ -307,7 +306,6 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
-</section>
+    </section>
 
 {% endblock %}

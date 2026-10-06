@@ -139,7 +139,7 @@ STORAGES = {
 }
 
 LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "employee_list"
+LOGIN_REDIRECT_URL = "employees:employee_list"
 LOGOUT_REDIRECT_URL = "login"
 
 LOGGING = {

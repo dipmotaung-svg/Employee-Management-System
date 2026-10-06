@@ -21,7 +21,7 @@ from django.urls import include, path
 
 
 def home(request):
-    return redirect("employee_list")
+    return redirect("employees:employee_list")
 
 
 urlpatterns = [

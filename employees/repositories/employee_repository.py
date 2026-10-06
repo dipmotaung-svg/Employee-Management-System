@@ -1,5 +1,5 @@
 from django.db.models import Q
-from .models import Department, Employee
+from employees.models import Department, Employee
 
 class EmployeeRepository:
     def filter(
@@ -67,3 +67,9 @@ class EmployeeRepository:
 
     def get_employee_types(self):
         return Employee.EMPLOYEE_TYPE
+
+    def email_exists(self, email):
+        return Employee.objects.filter(email__iexact=email).exists()
+
+    def save(self, **data):
+        return Employee.objects.create(**data)
