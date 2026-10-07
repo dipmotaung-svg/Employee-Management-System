@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Delete employee | SkillBridge EMS{% endblock %}
+{% block content %}
+<h1>Delete {{ employee.first_name }} {{ employee.last_name }}?</h1>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'employees:employee_detail' employee.pk %}">Cancel</a>
+</form>
+{% endblock %}

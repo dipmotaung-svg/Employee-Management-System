@@ -35,8 +35,31 @@ class EmployeeService:
     def get_employee_types(self):
         return self.repository.get_employee_types()
 
-    def create_employee(self, **data):
-        data["email"] = data["email"].strip().lower()
+    def get_employee(self, pk):
+        return self.repository.get_by_id(pk)
+
+    def create_employee(self, form):
+        data = form.cleaned_data
         if self.repository.email_exists(data["email"]):
-            raise ValueError("An employee with this email already exists.")
-        return self.repository.save(**data)
+            form.add_error("email", "An employee with this email already exists.")
+            return None
+        if self.repository.employee_id_exists(data["employee_id"]):
+            form.add_error("employee_id", "This employee ID is already in use.")
+            return None
+        return self.repository.save(form.save(commit=False))
+
+    def update_employee(self, pk, form):
+        data = form.cleaned_data
+        if self.repository.email_exists(data["email"], exclude_id=pk):
+            form.add_error("email", "Another employee already has this email.")
+            return None
+        if self.repository.employee_id_exists(data["employee_id"], exclude_id=pk):
+            form.add_error("employee_id", "Another employee already has this ID.")
+            return None
+        return self.repository.update(form.save(commit=False))
+
+    def delete_employee(self, pk):
+        employee = self.repository.get_by_id(pk)
+        if employee:
+            self.repository.delete(employee)
+        return employee

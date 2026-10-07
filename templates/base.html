@@ -19,7 +19,7 @@
 
         <div class="brand">
             <div class="brand-logo">
-                <img src="{% static 'images/skillbridgelogo.png' %}" alt="SkillBridge Logo">
+                <img src="{% static 'images/skillbridgelogo.png' %}" alt="SkillBridge Logo" class="brand-logo">
             </div>
 
             <div class="brand-text">
@@ -34,12 +34,10 @@
 
         <nav class="navigation">
             <a href="{% url 'employees:employee_list' %}" class="nav-link active">
-                <span>▦</span>
                 Dashboard
             </a>
 
             <a href="#employees" class="nav-link">
-                <span>♙</span>
                 Employees
             </a>
         </nav>
