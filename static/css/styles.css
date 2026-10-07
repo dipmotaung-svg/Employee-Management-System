@@ -109,3 +109,5 @@ select:focus-visible {
     .page-header h1 { font-size: 52px; }
     .stat-card strong { font-size: 42px; }
 }
+
+.topbar { justify-content: flex-end; }
