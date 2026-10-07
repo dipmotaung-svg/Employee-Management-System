@@ -19,7 +19,7 @@
 
         <div class="brand">
             <div class="brand-logo">
-                <img src="{% static 'images/logo.png' %}" alt="SkillBridge Logo">
+                <img src="{% static 'images/skillbridgelogo.png' %}" alt="SkillBridge Logo">
             </div>
 
             <div class="brand-text">
@@ -30,12 +30,12 @@
         </div>
 
 
-        {% url 'employees:employee_list' %}
+        {% if user.is_authenticated %}
 
         <nav class="navigation">
-            <a href="{% url 'employee_list' %}" class="nav-link active">
+            <a href="{% url 'employees:employee_list' %}" class="nav-link active">
                 <span>▦</span>
-                {% url 'employees:employee_list' %}
+                Dashboard
             </a>
 
             <a href="#employees" class="nav-link">
@@ -44,6 +44,7 @@
             </a>
         </nav>
         {% endif %}
+
         <div class="sidebar-bottom">
             <div class="system-status">
                 <span class="status-dot"></span>

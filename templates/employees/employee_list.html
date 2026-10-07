@@ -78,7 +78,7 @@
     </div>
 </section>
 
-<section class="panel">
+<section class="panel" id="employees">
     <div class="panel-header">
         <div>
             <span class="eyebrow">
@@ -183,14 +183,12 @@
             APPLY
         </button>
 
-        <a
-            href="{% url 'employee_list' %}"
-            class="reset-button"
-        >
-            {% url 'employees:employee_list' %}
-        </a>
+        <a href="{% url 'employees:employee_list' %}" class="reset-button">RESET</a>
     </form>
+
+    
     <section class="panel" id="employees">
+        <div class="table-container">
         <table>
             <thead>
                 <tr>
@@ -294,6 +292,7 @@
             {% endfor %}
             </tbody>
         </table>
+        </div>
     </section>
 
 {% endblock %}
