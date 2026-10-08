@@ -1,0 +1,96 @@
+@use "variables";
+@use "legacy";
+@use "responsive";
+
+button,
+input,
+select,
+a {
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.form-field input,
+.form-field select {
+    width: 100%;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.search-box:focus-within {
+    border-color: var(--gold);
+}
+
+.form-field small {
+    color: var(--grey);
+    line-height: 1.4;
+}
+
+.filter-button,
+.action-button,
+.reset-button,
+.logout-button {
+    border-radius: 4px;
+}
+
+.filter-button:active,
+.action-button:active {
+    transform: translateY(1px);
+}
+
+
+
+.message {
+    position: relative;
+}
+
+.message.is-hiding {
+    opacity: 0;
+    transform: translateY(-5px);
+}
+
+
+.table-container {
+    width: 100%;
+}
+
+tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+
+
+
+.search-box {
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.search-box:focus-within {
+    box-shadow: 0 0 0 3px rgba(212, 167, 44, 0.15);
+}
+
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
