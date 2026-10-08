@@ -102,3 +102,18 @@ function initialiseMobileMenu() {
 }
 
 document.addEventListener("DOMContentLoaded", initialiseMobileMenu);
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const successMessages = document.querySelectorAll(
+        '[data-message-tags~="success"]'
+    );
+
+    successMessages.forEach(function (message) {
+        const text = message.textContent.trim();
+
+        if (text.includes("has been deleted successfully.")) {
+            alert(text);
+        }
+    });
+});
