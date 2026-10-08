@@ -149,21 +149,14 @@
             >
                 Inactive
             </option>
-        </select>
-
-        <button
-            type="submit"
-            class="filter-button"
-        >
-            APPLY
-        </button>
+        </select> 
 
         <a href="{% url 'employees:employee_create' %}" class="reset-button">Add employee</a>
         <a href="{% url 'employees:employee_list' %}" class="reset-button">RESET</a>
     </form>
 
     
-    <section class="panel" id="employees">
+    
         <div class="table-container">
         <table id="employee-table">
             <thead>

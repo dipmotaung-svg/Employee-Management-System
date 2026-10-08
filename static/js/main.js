@@ -83,3 +83,22 @@ function initialiseMobileTableHint() {
         }
     });
 }
+
+function initialiseMobileMenu() {
+    const button = document.getElementById("mobileMenuToggle");
+    const sidebar = document.getElementById("sidebarNavigation");
+
+    if (!button || !sidebar) return;
+
+    button.addEventListener("click", () => {
+        const isOpen = sidebar.classList.toggle("mobile-open");
+
+        button.setAttribute("aria-expanded", String(isOpen));
+        button.setAttribute(
+            "aria-label",
+            isOpen ? "Close navigation menu" : "Open navigation menu"
+        );
+    });
+}
+
+document.addEventListener("DOMContentLoaded", initialiseMobileMenu);
