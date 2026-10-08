@@ -68,8 +68,30 @@ class EmployeeRepository:
     def get_employee_types(self):
         return Employee.EMPLOYEE_TYPE
 
-    def email_exists(self, email):
-        return Employee.objects.filter(email__iexact=email).exists()
 
-    def save(self, **data):
-        return Employee.objects.create(**data)
+
+    def get_by_id(self, pk):
+        return Employee.objects.select_related("department").filter(pk=pk).first()
+
+    def email_exists(self, email, exclude_id=None):
+        qs = Employee.objects.filter(email__iexact=email)
+        if exclude_id:
+            qs = qs.exclude(pk=exclude_id)
+        return qs.exists()
+
+    def employee_id_exists(self, employee_id, exclude_id=None):
+        qs = Employee.objects.filter(employee_id=employee_id)
+        if exclude_id:
+            qs = qs.exclude(pk=exclude_id)
+        return qs.exists()
+
+    def save(self, employee):
+        employee.save()
+        return employee
+
+    def update(self, employee):
+        employee.save()
+        return employee
+
+    def delete(self, employee):
+        employee.delete()

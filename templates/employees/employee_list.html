@@ -1,7 +1,6 @@
 {% extends "base.html" %}
+{% load employee_extras %}
 {% block title %}Dashboard | SkillBridge EMS{% endblock %}
-
-
 
 {% block content %}
 <section class="page-header">
@@ -14,9 +13,6 @@
 
 <section class="stats">
     <div class="stat-card">
-        <div class="stat-icon">
-            ♙
-        </div>
 
         <div>
             <span>
@@ -30,15 +26,10 @@
     </div>
 
     <div class="stat-card active-card">
-        <div class="stat-icon">
-            ✓
-        </div>
-
         <div>
             <span>
                 ACTIVE EMPLOYEES
             </span>
-
             <strong>
                 {{ summary.active_employees }}
             </strong>
@@ -46,10 +37,6 @@
     </div>
 
     <div class="stat-card">
-        <div class="stat-icon">
-            !
-        </div>
-
         <div>
             <span>
                 INACTIVE EMPLOYEES
@@ -62,10 +49,6 @@
     </div>
 
     <div class="stat-card gold-card">
-        <div class="stat-icon">
-            ▦
-        </div>
-
         <div>
             <span>
                 DEPARTMENTS
@@ -98,16 +81,8 @@
 
     <form method="get" class="filters">
         <div class="search-box">
-            <span>
-                ⌕
-            </span>
-
-            <input
-                type="text"
-                name="q"
-                value="{{ search }}"
-                placeholder="Search by name, ID or email"
-            >
+            <span>⌕</span>
+            <input type="text" name="q" id="search-input" value="{{ search }}" placeholder="Search employees">
         </div>
 
         <select name="department">
@@ -174,22 +149,16 @@
             >
                 Inactive
             </option>
-        </select>
+        </select> 
 
-        <button
-            type="submit"
-            class="filter-button"
-        >
-            APPLY
-        </button>
-
+        <a href="{% url 'employees:employee_create' %}" class="reset-button">Add employee</a>
         <a href="{% url 'employees:employee_list' %}" class="reset-button">RESET</a>
     </form>
 
     
-    <section class="panel" id="employees">
+    
         <div class="table-container">
-        <table>
+        <table id="employee-table">
             <thead>
                 <tr>
                     <th>
@@ -271,6 +240,7 @@
                             </span>
                         {% endif %}
                     </td>
+                    <td><a href="{% url 'employees:employee_detail' employee.pk %}">View</a></td>
                 </tr>
             {% empty %}
                 <tr>
@@ -294,5 +264,32 @@
         </table>
         </div>
     </section>
+<script>
+(function () {
+    const input = document.getElementById("search-input");
+    const table = document.getElementById("employee-table");
+    if (!input || !table) return;
 
+    let timer;
+    input.addEventListener("input", function () {
+        clearTimeout(timer);
+        timer = setTimeout(async function () {
+            const url = new URL(window.location.href);
+            url.searchParams.set("q", input.value);
+
+            const response = await fetch(url, {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+            const html = await response.text();
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            const newTable = doc.getElementById("employee-table");
+
+            if (newTable) {
+                table.innerHTML = newTable.innerHTML;
+                history.replaceState(null, "", url);
+            }
+        }, 300);
+    });
+})();
+</script>
 {% endblock %}

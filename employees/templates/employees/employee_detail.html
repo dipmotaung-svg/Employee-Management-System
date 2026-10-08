@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load employee_extras %}
+{% block title %}Employee | SkillBridge EMS{% endblock %}
+{% block content %}
+<h1>{{ employee.first_name }} {{ employee.last_name }}</h1>
+<p>ID: {{ employee.employee_id }}</p>
+<p>Email: {{ employee.email }}</p>
+<p>Phone: {{ employee.phone_number }}</p>
+<p>Title: {{ employee.title }}</p>
+<p>Department: {{ employee.department }}</p>
+<p>Type: {{ employee.employee_type }}</p>
+<p>Salary: {{ employee.salary|rand }}</p>
+<p>Joined: {{ employee.date_joined }}</p>
+<a href="{% url 'employees:employee_edit' employee.pk %}">Edit</a>
+<a href="{% url 'employees:employee_delete' employee.pk %}">Delete</a>
+<a href="{% url 'employees:employee_list' %}">Back</a>
+{% endblock %}

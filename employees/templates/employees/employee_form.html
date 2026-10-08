@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Employee | SkillBridge EMS{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+    <a href="{% url 'employees:employee_list' %}">Cancel</a>
+</form>
+{% endblock %}
