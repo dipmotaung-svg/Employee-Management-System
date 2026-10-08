@@ -19,7 +19,7 @@
 
         <div class="brand">
             <div class="brand-logo">
-                <img src="{% static 'images/skillbridgelogo.png' %}" alt="SkillBridge Logo">
+                <img src="{% static 'images/skillbridgelogo.png' %}" alt="SkillBridge Logo" class="brand-logo">
             </div>
 
             <div class="brand-text">
@@ -34,26 +34,16 @@
 
         <nav class="navigation">
             <a href="{% url 'employees:employee_list' %}" class="nav-link active">
-                <span>▦</span>
                 Dashboard
             </a>
 
             <a href="#employees" class="nav-link">
-                <span>♙</span>
                 Employees
             </a>
         </nav>
         {% endif %}
 
-        <div class="sidebar-bottom">
-            <div class="system-status">
-                <span class="status-dot"></span>
-                <div>
-                    <strong>System Secure</strong>
-                    <small>Authenticated session</small>
-                </div>
-            </div>
-        </div>
+        
     </aside>
 
 
@@ -87,8 +77,20 @@
         </header>
 
         <main class="content">
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             {% block content %}
             {% endblock %}
+
         </main>
 
         
