@@ -99,6 +99,18 @@ class EmployeeDeleteView(LoginRequiredMixin, View):
 
     @audit_log("DELETE")
     def post(self, request, pk):
+        employee = self.service.get_employee(pk)
+
+        if not employee:
+            raise Http404
+
+        full_name = f"{employee.first_name} {employee.last_name}"
+
         self.service.delete_employee(pk)
-        messages.success(request, "Employee deleted.")
+
+        messages.success(
+            request,
+            f"{full_name} has been deleted successfully."
+        )
+
         return redirect("employees:employee_list")
