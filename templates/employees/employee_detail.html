@@ -11,7 +11,7 @@
 <p>Type: {{ employee.employee_type }}</p>
 <p>Salary: {{ employee.salary|rand }}</p>
 <p>Joined: {{ employee.date_joined }}</p>
-<a href="{% url 'employees:employee_edit' employee.pk %}">Edit</a>
-<a href="{% url 'employees:employee_delete' employee.pk %}">Delete</a>
-<a href="{% url 'employees:employee_list' %}">Back</a>
+<a href="{% url 'employees:employee_edit' employee.pk %}" class="reset-button">Edit</a>
+<a href="{% url 'employees:employee_delete' employee.pk %}" class="reset-button">Delete</a>
+<a href="{% url 'employees:employee_list' %}" class="reset-button">Back</a>
 {% endblock %}

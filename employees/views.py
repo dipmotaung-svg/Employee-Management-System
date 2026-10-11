@@ -1,30 +1,138 @@
+from django.core.cache import cache
+from django.db.models import Q
+from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.views import View
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_GET, require_POST
+from employees.models import Employee
 
+
+from .notifications import notify_employee_change
 from .forms import EmployeeForm
 from .decorators import audit_log
 
+
+
+@login_required
+@require_GET
+def employee_api(request):
+    search = request.GET.get("search", "").strip()
+
+    employees = Employee.objects.select_related("department").all()
+
+    if search:
+        employees = employees.filter(
+            Q(first_name__icontains=search) |
+            Q(last_name__icontains=search) |
+            Q(email__icontains=search)
+        )
+
+    data = []
+
+    for employee in employees:
+        data.append({
+            "id": employee.pk,
+            "first_name": employee.first_name,
+            "last_name": employee.last_name,
+            "department": (
+                employee.department.name
+                if employee.department else None
+            ),
+        })
+
+    return JsonResponse({
+        "count": len(data),
+        "employees": data,
+    })
+
+
+@login_required
+@require_GET
+def employee_api_detail(request, pk):
+    employee = Employee.objects.select_related(
+        "department"
+    ).filter(pk=pk).first()
+
+    if employee is None:
+        raise Http404("Employee not found")
+
+    return JsonResponse({
+        "id": employee.pk,
+        "first_name": employee.first_name,
+        "last_name": employee.last_name,
+        "email": employee.email,
+        "department": (
+            employee.department.name
+            if employee.department else None
+        ),
+        "employee_type": employee.employee_type,
+        "is_active": employee.is_active,
+    })
+
+
+@login_required
+@require_GET
+def employee_api_stats(request):
+    return JsonResponse({
+        "total": Employee.objects.count(),
+        "active": Employee.objects.filter(is_active=True).count(),
+        "inactive": Employee.objects.filter(is_active=False).count(),
+    })
+
+@login_required
+@require_POST
+def clear_cache(request):
+    cache.delete("employee_dashboard_summary")
+
+    messages.success(
+        request,
+        "Cache cleared successfully."
+    )
+
+    return redirect("employees:employee_list")
+
 def hello(request):
     return render(request, "employees/hello.html")
+
 
 
 class EmployeeListView(LoginRequiredMixin, View):
     service = None
 
     def get(self, request):
-        search = request.GET.get("q", "")
-        department = request.GET.get("department", "")
-        employee_type = request.GET.get("employee_type", "")
-        status = request.GET.get("status", "")
+        filter_names = ("q", "department", "employee_type", "status")
+
+        
+        if request.GET.get("reset") == "1":
+            for name in filter_names:
+                request.session.pop(f"employee_filter_{name}", None)
+
+        
+        elif any(name in request.GET for name in filter_names):
+            for name in filter_names:
+                request.session[f"employee_filter_{name}"] = request.GET.get(name, "")
+
+        
+        search = request.session.get("employee_filter_q", "")
+        department = request.session.get("employee_filter_department", "")
+        employee_type = request.session.get("employee_filter_employee_type", "")
+        status = request.session.get("employee_filter_status", "")
+        
+        summary = cache.get("employee_dashboard_summary")
+        if summary is None:
+            summary = self.service.get_dashboard_summary()
+            cache.set("employee_dashboard_summary", summary, timeout=60)
 
         context = {
             "employees": self.service.list_employees(
                 search, department, employee_type, status
             ),
-            "summary": self.service.get_dashboard_summary(),
+            "summary": summary,
             "departments": self.service.get_departments(),
             "employee_types": self.service.get_employee_types(),
             "search": search,
@@ -48,6 +156,12 @@ class EmployeeCreateView(LoginRequiredMixin, View):
         if form.is_valid():
             employee = self.service.create_employee(form)
             if employee:
+                transaction.on_commit(
+                    lambda: (
+                        cache.delete("employee_dashboard_summary"),
+                        notify_employee_change()
+                    )
+                )
                 messages.success(request, "Employee created.")
                 return redirect("employees:employee_detail", pk=employee.pk)
         return render(request, "employees/employee_form.html",
@@ -82,6 +196,12 @@ class EmployeeUpdateView(LoginRequiredMixin, View):
         form = EmployeeForm(request.POST, instance=employee)
         if form.is_valid():
             if self.service.update_employee(pk, form):
+                transaction.on_commit(
+                    lambda: (
+                        cache.delete("employee_dashboard_summary"),
+                        notify_employee_change()
+                    )
+                )
                 messages.success(request, "Employee updated.")
                 return redirect("employees:employee_detail", pk=pk)
         return render(request, "employees/employee_form.html",
@@ -107,6 +227,13 @@ class EmployeeDeleteView(LoginRequiredMixin, View):
         full_name = f"{employee.first_name} {employee.last_name}"
 
         self.service.delete_employee(pk)
+
+        transaction.on_commit(
+            lambda: (
+                cache.delete("employee_dashboard_summary"),
+                notify_employee_change()
+            )
+        )
 
         messages.success(
             request,

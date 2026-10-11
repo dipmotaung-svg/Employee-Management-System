@@ -3,12 +3,22 @@
 {% block title %}Dashboard | SkillBridge EMS{% endblock %}
 
 {% block content %}
+
+<div id="employee-live-notice" role="status" hidden></div>
+
 <section class="page-header">
     <div>
         <h1>
             Dashboard
         </h1>
     </div>
+
+    <form method="post" action="{% url 'employees:clear_cache' %}">
+        {% csrf_token %}
+        <button type="submit" class="reset-button">
+            Clear Cache
+        </button>
+    </form>
 </section>
 
 <section class="stats">
@@ -152,7 +162,7 @@
         </select> 
 
         <a href="{% url 'employees:employee_create' %}" class="reset-button">Add employee</a>
-        <a href="{% url 'employees:employee_list' %}" class="reset-button">RESET</a>
+        <a href="{% url 'employees:employee_list' %}?reset=1" class="reset-button">RESET</a>
     </form>
 
     
@@ -240,7 +250,7 @@
                             </span>
                         {% endif %}
                     </td>
-                    <td><a href="{% url 'employees:employee_detail' employee.pk %}">View</a></td>
+                    <td><a href="{% url 'employees:employee_detail' employee.pk %}" class="reset-button">View Details</a></td>
                 </tr>
             {% empty %}
                 <tr>

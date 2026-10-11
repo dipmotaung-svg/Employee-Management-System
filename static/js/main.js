@@ -35,18 +35,22 @@ function initialiseFilterForm() {
 
 
 function initialiseMessages() {
-    const messages = document.querySelectorAll(".message");
+    const messages = document.querySelectorAll(".messages .alert");
 
-    messages.forEach((message) => {
-        window.setTimeout(() => {
-            message.classList.add("is-hiding");
+    console.log("Notifications found:", messages.length);
 
-            window.setTimeout(() => {
+    messages.forEach(function (message) {
+        setTimeout(function () {
+            message.style.transition = "opacity 0.5s ease";
+            message.style.opacity = "0";
+
+            setTimeout(function () {
                 message.remove();
-            }, 300);
-        }, 5000);
+            }, 500);
+        }, 4000);
     });
 }
+
 
 
 function initialiseDeleteConfirmations() {
@@ -116,4 +120,65 @@ document.addEventListener("DOMContentLoaded", function () {
             alert(text);
         }
     });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const notice = document.getElementById("employee-live-notice");
+
+    if (!notice) return;
+
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+
+    const socket = new WebSocket(
+        `${protocol}//${window.location.host}/ws/employees/`
+    );
+
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+
+        notice.textContent = data.message;
+        notice.hidden = false;
+    };
+
+    socket.onerror = function () {
+        console.warn("Employee notification connection failed.");
+    };
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const notice = document.getElementById("employee-live-notice");
+
+    if (!notice) return;
+
+    const protocol =
+        window.location.protocol === "https:" ? "wss:" : "ws:";
+
+    const socket = new WebSocket(
+        `${protocol}//${window.location.host}/ws/employees/`
+    );
+
+    socket.onopen = function () {
+        console.log("WebSocket connected");
+    };
+
+    socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+
+        console.log("Employee update received:", data.message);
+
+        notice.textContent = data.message;
+        notice.hidden = false;
+
+        window.alert(data.message);
+    };
+
+    socket.onerror = function (error) {
+        console.error("WebSocket connection failed:", error);
+    };
+
+    socket.onclose = function (event) {
+        console.warn("WebSocket disconnected:", event.code);
+    };
 });

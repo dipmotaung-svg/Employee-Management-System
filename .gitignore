@@ -1,4 +1,5 @@
 .env
+.venv/
 venv/
 __pycache__/
 *.pyc
@@ -6,3 +7,4 @@ logs/*
 !logs/.gitkeep
 staticfiles/
 node_modules/
+db.sqlite
