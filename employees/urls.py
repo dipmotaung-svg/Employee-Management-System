@@ -5,7 +5,9 @@ from employees.services.employee_service import EmployeeService
 from employees.views import (
     EmployeeListView, EmployeeCreateView, EmployeeDetailView,
     EmployeeUpdateView, EmployeeDeleteView, hello,
+    employee_api, clear_cache,
 )
+
 app_name = "employees"
 
 repository = EmployeeRepository()
@@ -18,5 +20,7 @@ urlpatterns = [
     path("<int:pk>/edit/", EmployeeUpdateView.as_view(service=service), name="employee_edit"),
     path("<int:pk>/delete/", EmployeeDeleteView.as_view(service=service), name="employee_delete"),
     path("hello/", hello, name="hello"),
+    path("api/employees/", employee_api, name="employee_api"),
+    path("clear-cache/", clear_cache, name="clear_cache"),
 ]
 

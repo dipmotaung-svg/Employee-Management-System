@@ -18,6 +18,12 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.shortcuts import redirect
 from django.urls import include, path
+from employees.views import (
+    employee_api,
+    employee_api_detail,
+    employee_api_stats,
+)
+
 
 
 def home(request):
@@ -48,6 +54,10 @@ urlpatterns = [
         include("employees.urls")
     ),
 
+    path("api/v1/employees/", employee_api, name="api_employee_list"),
+    path("api/v1/employees/stats/", employee_api_stats, name="api_employee_stats"),
+    path("api/v1/employees/<int:pk>/", employee_api_detail, name="api_employee_detail"),
+    
     path(
         "",
         home,
