@@ -122,8 +122,25 @@ class EmployeeListView(LoginRequiredMixin, View):
         department = request.session.get("employee_filter_department", "")
         employee_type = request.session.get("employee_filter_employee_type", "")
         status = request.session.get("employee_filter_status", "")
-        
+
+        recent_ids = request.session.get("recently_viewed", [])
+
+        recent_employees = Employee.objects.filter(
+            pk__in=recent_ids
+        )
+
+        recent_lookup = {
+            employee.pk: employee
+            for employee in recent_employees
+        }
+
+        recently_viewed = [
+            recent_lookup[employee_id]
+            for employee_id in recent_ids
+            if employee_id in recent_lookup
+        ]
         summary = cache.get("employee_dashboard_summary")
+
         if summary is None:
             summary = self.service.get_dashboard_summary()
             cache.set("employee_dashboard_summary", summary, timeout=60)
@@ -139,6 +156,7 @@ class EmployeeListView(LoginRequiredMixin, View):
             "selected_department": department,
             "selected_employee_type": employee_type,
             "selected_status": status,
+            "recently_viewed": recently_viewed,
         }
 
         return render(request, "employees/employee_list.html", context)
@@ -168,14 +186,45 @@ class EmployeeCreateView(LoginRequiredMixin, View):
                     {"form": form, "title": "Add employee"})
 
 
+
 class EmployeeDetailView(LoginRequiredMixin, View):
     service = None
 
     def get(self, request, pk):
         employee = self.service.get_employee(pk)
+
         if not employee:
             raise Http404
-        return render(request, "employees/employee_detail.html", {"employee": employee})
+
+        recently_viewed = request.session.get("recently_viewed", [])
+
+        recently_viewed = [
+            employee_id for employee_id in recently_viewed
+            if employee_id != employee.pk
+        ]
+
+        recently_viewed.insert(0, employee.pk)
+
+        request.session["recently_viewed"] = recently_viewed[:5]
+        
+        recent_ids = request.session["recently_viewed"]
+
+        recent_employees = Employee.objects.filter(
+            pk__in=recent_ids
+        )
+
+        recent_lookup = {
+            employee.pk: employee
+            for employee in recent_employees
+        }
+
+        recently_viewed_employees = [
+            recent_lookup[employee_id]
+            for employee_id in recent_ids
+            if employee_id in recent_lookup
+        ]
+
+        return render(request, "employees/employee_detail.html", {"employee": employee, "recently_viewed": recently_viewed_employees,})
 
 
 class EmployeeUpdateView(LoginRequiredMixin, View):

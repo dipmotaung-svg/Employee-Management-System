@@ -14,4 +14,40 @@
 <a href="{% url 'employees:employee_edit' employee.pk %}" class="reset-button">Edit</a>
 <a href="{% url 'employees:employee_delete' employee.pk %}" class="reset-button">Delete</a>
 <a href="{% url 'employees:employee_list' %}" class="reset-button">Back</a>
+<br></br>
+<section class="panel recently-viewed">
+    <div class="panel-header">
+        <div>
+            <h2>Recently Viewed Employees</h2>
+        </div>
+    </div>
+
+    {% if recently_viewed %}
+        <div class="recently-viewed-list">
+            {% for recent_employee in recently_viewed %}
+                <div class="recent-employee">
+                    <div class="employee">
+                        <div class="employee-avatar">
+                            {{ recent_employee.first_name|slice:":1"|upper }}{{ recent_employee.last_name|slice:":1"|upper }}
+                        </div>
+
+                        <div>
+                            <strong>
+                                {{ recent_employee.first_name }}
+                                {{ recent_employee.last_name }}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'employees:employee_detail' recent_employee.pk %}" class="reset-button">
+                        View Details
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No recently viewed employees yet.</p>
+    {% endif %}
+</section>
+
 {% endblock %}

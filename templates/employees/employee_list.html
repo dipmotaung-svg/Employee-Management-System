@@ -71,6 +71,45 @@
     </div>
 </section>
 
+<section class="panel recently-viewed">
+    <div class="panel-header">
+        <div>
+            <h2>Recently Viewed Employees</h2>
+        </div>
+    </div>
+
+    {% if recently_viewed %}
+        <div class="recently-viewed-list">
+            {% for employee in recently_viewed %}
+                <div class="recent-employee">
+                    <div class="employee">
+                        <div class="employee-avatar">
+                            {{ employee.first_name|slice:":1"|upper }}{{ employee.last_name|slice:":1"|upper }}
+                        </div>
+
+                        <div>
+                            <strong>
+                                {{ employee.first_name }}
+                                {{ employee.last_name }}
+                            </strong>
+                            <small>
+                                {{ employee.title }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'employees:employee_detail' employee.pk %}" class="reset-button">
+                        View Details
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No recently viewed employees yet. Open an employee profile to get started.</p>
+    {% endif %}
+</section>
+
+<br></br>
 <section class="panel" id="employees">
     <div class="panel-header">
         <div>
