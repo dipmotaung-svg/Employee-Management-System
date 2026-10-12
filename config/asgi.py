@@ -20,13 +20,11 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 
-# Initialise Django for normal HTTP requests
+
 django_asgi_app = get_asgi_application()
 
-# Import our WebSocket routes
 from employees.routing import websocket_urlpatterns
 
-# Handle both HTTP and WebSocket connections
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
     "websocket": AllowedHostsOriginValidator(

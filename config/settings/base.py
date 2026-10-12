@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
+import dj_database_url
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -87,18 +88,27 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "mssql",
-        "NAME": os.getenv("DB_NAME", "SkillBridgeEMS"),
-        "HOST": os.getenv("DB_HOST", r".\SQLEXPRESS"),
-        "PORT": os.getenv("DB_PORT", ""),
-        "OPTIONS": {
-            "driver": "ODBC Driver 18 for SQL Server",
-            "extra_params": "Trusted_Connection=yes;TrustServerCertificate=yes;",
-        },
+if os.getenv("DATABASE_URL"):
+    DATABASES = {
+        "default": dj_database_url.config(
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "mssql",
+            "NAME": os.getenv("DB_NAME", "SkillBridgeEMS"),
+            "HOST": os.getenv("DB_HOST", r".\SQLEXPRESS"),
+            "PORT": os.getenv("DB_PORT", ""),
+            "OPTIONS": {
+                "driver": "ODBC Driver 18 for SQL Server",
+                "extra_params": "Trusted_Connection=yes;TrustServerCertificate=yes;",
+            },
+        }
+    }
 
 
 # Password validation
