@@ -15,3 +15,18 @@ STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
+
+
+# Production email configuration
+MAILERS = {
+    "default": {
+        "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+        "OPTIONS": {
+            "host": os.environ.get("SMTP_HOST", ""),
+            "port": int(os.environ.get("SMTP_PORT", "587")),
+            "username": os.environ.get("SMTP_USERNAME", ""),
+            "password": os.environ.get("SMTP_PASSWORD", ""),
+            "use_tls": True,
+        },
+    },
+}
