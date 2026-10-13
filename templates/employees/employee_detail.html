@@ -11,9 +11,11 @@
 <p>Type: {{ employee.employee_type }}</p>
 <p>Salary: {{ employee.salary|rand }}</p>
 <p>Joined: {{ employee.date_joined }}</p>
-<a href="{% url 'employees:employee_edit' employee.pk %}" class="reset-button">Edit</a>
-<a href="{% url 'employees:employee_delete' employee.pk %}" class="reset-button">Delete</a>
-<a href="{% url 'employees:employee_list' %}" class="reset-button">Back</a>
+<div class="action-buttons">
+    <a href="{% url 'employees:employee_edit' employee.pk %}" class="action-button action-primary">Edit</a>
+    <a href="{% url 'employees:employee_delete' employee.pk %}" class="action-button action-danger">Delete</a>
+    <a href="{% url 'employees:employee_list' %}" class="action-button action-secondary">Back</a>
+</div>
 <br></br>
 <section class="panel recently-viewed">
     <div class="panel-header">

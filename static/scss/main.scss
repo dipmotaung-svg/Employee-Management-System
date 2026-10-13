@@ -94,3 +94,51 @@ select:focus-visible {
         transition-duration: 0.01ms !important;
     }
 }
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease;
+}
+
+.action-button:hover {
+    filter: brightness(0.9);
+}
+
+.action-button:focus-visible {
+    outline: 3px solid #c9a227;
+    outline-offset: 3px;
+}
+
+.action-primary {
+    background-color: #2563eb;
+    color: white;
+}
+
+.action-secondary {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+.action-danger {
+    background-color: #b91c1c;
+    color: white;
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
